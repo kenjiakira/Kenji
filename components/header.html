@@ -1,0 +1,47 @@
+<header class="main-header">
+    <div class="container">
+        <div class="header-content">
+            <div class="logo">
+                <a href="/">
+                    <i class="fas fa-blog"></i>
+                    <span class="blog-name">Kenji Blog</span>
+                </a>
+            </div>
+            <div class="auth-section">
+                <li class="auth-dropdown">
+                    <button id="account-btn" class="account-btn" aria-label="Account menu" aria-expanded="false">
+                        <i class="fas fa-user-circle"></i>
+                        <span>Account</span>
+                    </button>
+                    <div id="auth-dropdown-content" class="dropdown-content">
+                        <a href="account.html" class="dropdown-item">
+                            <i class="fas fa-user"></i> Profile
+                        </a>
+                        <a href="/settings" class="dropdown-item">                            
+                            <i class="fas fa-cog"></i> Settings
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="/login" class="dropdown-item" id="login-link">
+                            <i class="fas fa-sign-in-alt"></i> Login
+                        </a>
+                        <a href="/register" class="dropdown-item" id="register-link">
+                            <i class="fas fa-user-plus"></i> Register
+                        </a>
+                        <a href="#" class="dropdown-item" id="logout-link" style="display: none;">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a>
+                    </div>
+                </li>
+            </div>
+            
+            <nav class="main-nav">
+                <ul id="nav-menu">
+                    <li><a href="/" class="nav-link">Home</a></li>
+                    <li><a href="/categories" class="nav-link">Categories</a></li>
+                    <li><a href="/about" class="nav-link">About</a></li>
+                    <li><a href="/contact" class="nav-link">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</header>

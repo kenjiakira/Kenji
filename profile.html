@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile - My Simple Blog</title>
+    <link rel="stylesheet" href="style/fonts.css">
+    <link rel="stylesheet" href="style/main.css">
+    <link rel="stylesheet" href="style/auth.css">
+    <link rel="stylesheet" href="style/profile.css">
+    <link rel="stylesheet" href="style/header.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<body>
+    <!-- Add loading overlay -->
+    <div class="page-loading" id="page-loading">
+        <span class="loader"></span>
+    </div>
+
+    <div id="header-placeholder"></div>
+
+    <main class="container">
+        <div id="profile-content">
+            <!-- Profile content will be loaded here by JavaScript -->
+            <div class="not-logged-in" id="not-logged-in">
+                <h2>Not Logged In</h2>
+                <p>Please login to view your profile</p>
+                <a href="index.html" class="btn">Back to Home</a>
+            </div>
+        </div>
+    </main>
+
+    <script type="module">
+        import { setupAuthUI, getCurrentUser } from './js/auth-status.js';
+        import { loadHeader } from './js/header-loader.js';
+        
+        document.addEventListener('DOMContentLoaded', async function() {
+            try {
+                // Load header first
+                await loadHeader();
+                
+                // Hide the loading overlay as soon as the header is loaded
+                const loader = document.getElementById('page-loading');
+                loader.classList.add('hide');
+                setTimeout(() => {
+                    loader.style.display = 'none';
+                }, 300);
+                
+                // Setup auth UI
+                await setupAuthUI();
+                
+                // Check auth status
+                const response = await fetch('/api/auth/session');
+                const data = await response.json();
+                
+                if (data.isAuthenticated) {
+                    await loadProfileData(data.user);
+                } else {
+                    document.getElementById('not-logged-in').style.display = 'block';
+                }
+                
+            } catch (error) {
+                console.error("Error loading page:", error);
+                document.getElementById('not-logged-in').style.display = 'block';
+                
+                // Hide loader if there's an error
+                const loader = document.getElementById('page-loading');
+                if (loader && !loader.classList.contains('hide')) {
+                    loader.classList.add('hide');
+                    setTimeout(() => {
+                        loader.style.display = 'none';
+                    }, 300);
+                }
+            }
+        });
+
+        async function loadProfileData(userData) {
+            const profileContent = document.getElementById('profile-content');
+            const notLoggedInSection = document.getElementById('not-logged-in');
+
+            notLoggedInSection.style.display = 'none';
+
+            profileContent.innerHTML = `
+                <h1>My Profile</h1>
+                <div class="profile-container">
+                    <div class="profile-header">
+                        <div class="profile-image">${userData.displayName ? userData.displayName.charAt(0).toUpperCase() : '?'}</div>
+                        <div class="profile-info">
+                            <h2>${userData.displayName || 'User'}</h2>
+                            <p class="profile-email">${userData.email}</p>
+                            <span class="profile-role role-${userData.role}">${userData.role.toUpperCase()}</span>
+                        </div>
+                    </div>
+                    <div class="profile-section">
+                        <h3>Account Information</h3>
+                        <p><strong>Email:</strong> ${userData.email}</p>
+                        <p><strong>Role:</strong> ${userData.role}</p>
+                        <p><strong>Member Since:</strong> ${new Date(userData.createdAt).toLocaleDateString()}</p>
+                    </div>
+                    ${userData.role === 'admin' ? `
+                    <div class="profile-section">
+                        <h3>Admin Dashboard</h3>
+                        <p>As an admin, you have access to manage blog posts and user accounts.</p>
+                        <p>Admin functionality would be added here in a real application.</p>
+                    </div>
+                    ` : ''}
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>

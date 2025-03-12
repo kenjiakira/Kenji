@@ -1,0 +1,67 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "index.js",
+      "use": "@vercel/node"
+    },
+    {
+      "src": "style/**",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "js/**",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "components/**",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "*.html",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "assets/**",
+      "use": "@vercel/static"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "index.js"
+    },
+    {
+      "src": "^/account(?:/)?$",
+      "dest": "/account.html"
+    },
+    {
+      "src": "^/login(?:/)?$",
+      "dest": "/login.html"
+    },
+    {
+      "src": "^/register(?:/)?$",
+      "dest": "/register.html"
+    },
+    {
+      "src": "^/components/(.*)$",
+      "dest": "/components/$1"
+    },
+    {
+      "src": "^/js/(.*)$",
+      "dest": "/js/$1"
+    },
+    {
+      "src": "^/style/(.*)$",
+      "dest": "/style/$1"
+    },
+    {
+      "src": "^/assets/(.*)$",
+      "dest": "/assets/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "index.js"
+    }
+  ]
+}
