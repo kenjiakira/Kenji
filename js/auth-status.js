@@ -3,6 +3,9 @@ let csrfToken = null;
 
 export async function setupAuthUI() {
     try {
+        // Fetch CSRF token as early as possible
+        await fetchCsrfToken();
+        
         const accountBtn = document.getElementById('account-btn');
         const dropdownContent = document.getElementById('auth-dropdown-content');
         
@@ -12,25 +15,49 @@ export async function setupAuthUI() {
         }
         
         dropdownContent.style.display = 'none';
-        dropdownContent.classList.remove('show');
         
-        let isProcessing = false;
         accountBtn.addEventListener('click', function(e) {
-            if (isProcessing) return;
-            isProcessing = true;
-            
             e.preventDefault();
             e.stopPropagation();
-            dropdownContent.classList.toggle('show');
             
-            setTimeout(() => { isProcessing = false; }, 300);
-        });
-        
-        document.addEventListener('click', function(e) {
-            if (dropdownContent.classList.contains('show') && !e.target.closest('.auth-dropdown')) {
+
+            if (dropdownContent.style.display === 'none' || dropdownContent.style.display === '') {
+                dropdownContent.style.display = 'block';
+                dropdownContent.classList.add('show');
+            } else {
+                dropdownContent.style.display = 'none';
                 dropdownContent.classList.remove('show');
             }
         });
+        
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.auth-dropdown') && dropdownContent.classList.contains('show')) {
+                dropdownContent.style.display = 'none';
+                dropdownContent.classList.remove('show');
+            }
+        });
+        
+        const loginLink = document.getElementById('login-link');
+        const registerLink = document.getElementById('register-link');
+        const logoutLink = document.getElementById('logout-link');
+        
+        if (loginLink) {
+            loginLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                dropdownContent.style.display = 'none';
+                dropdownContent.classList.remove('show');
+                toggleLoginForm(e);
+            });
+        }
+        
+        if (registerLink) {
+            registerLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                dropdownContent.style.display = 'none';
+                dropdownContent.classList.remove('show');
+                toggleSignupForm(e);
+            });
+        }
         
         const response = await fetch('/api/auth/session');
         const data = await response.json();
@@ -40,10 +67,6 @@ export async function setupAuthUI() {
             if (authDropdown) {
                 authDropdown.classList.add('logged-in');
             }
-            
-            const loginLink = document.getElementById('login-link');
-            const registerLink = document.getElementById('register-link');
-            const logoutLink = document.getElementById('logout-link');
             
             if (loginLink) loginLink.style.display = 'none';
             if (registerLink) registerLink.style.display = 'none';
@@ -105,7 +128,7 @@ function handleAuthenticatedUser(user) {
     const dropdownContent = document.getElementById('auth-dropdown-content');
     
     dropdownContent.innerHTML = `
-        <a href="account.html" class="dropdown-item">
+        <a href="profile.html" class="dropdown-item">
             <i class="fas fa-user"></i> Profile
         </a>
         <a href="#" id="logout-btn" class="dropdown-item">
@@ -146,6 +169,11 @@ function handleUnauthenticatedUser() {
 
 async function handleLogout() {
     try {
+        // Make sure we have a CSRF token before making the request
+        if (!csrfToken) {
+            await fetchCsrfToken();
+        }
+        
         await fetch('/api/auth/logout', {
             method: 'POST',
             headers: {
@@ -162,8 +190,7 @@ async function handleLogout() {
 
 function toggleLoginForm(e) {
     e.preventDefault();
-    
-    document.getElementById('auth-dropdown-content').style.display = 'none';
+
     
     const signupFormContainer = document.getElementById('signup-form-container');
     if (signupFormContainer) signupFormContainer.style.display = 'none';
@@ -209,14 +236,13 @@ function toggleLoginForm(e) {
         });
     } else {
 
-        loginFormContainer.style.display = loginFormContainer.style.display === 'none' ? 'flex' : 'none';
+        loginFormContainer.style.display = 'flex';
     }
 }
 
 function toggleSignupForm(e) {
     e.preventDefault();
-    
-    document.getElementById('auth-dropdown-content').style.display = 'none';
+
     
     const loginFormContainer = document.getElementById('login-form-container');
     if (loginFormContainer) loginFormContainer.style.display = 'none';
@@ -266,7 +292,7 @@ function toggleSignupForm(e) {
         });
     } else {
 
-        signupFormContainer.style.display = signupFormContainer.style.display === 'none' ? 'flex' : 'none';
+        signupFormContainer.style.display = 'flex';
     }
 }
 
@@ -278,6 +304,10 @@ async function handleLogin(e) {
     const errorElement = document.getElementById('login-error');
     
     try {
+        if (!csrfToken) {
+            await fetchCsrfToken();
+        }
+        
         const response = await fetch('/api/auth/login', {
             method: 'POST',
             headers: {
@@ -310,6 +340,10 @@ async function handleSignup(e) {
     const errorElement = document.getElementById('signup-error');
     
     try {
+        if (!csrfToken) {
+            await fetchCsrfToken();
+        }
+        
         const response = await fetch('/api/auth/signup', {
             method: 'POST',
             headers: {

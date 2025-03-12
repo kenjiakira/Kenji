@@ -162,113 +162,98 @@ nav ul li {
 }
 
 /* Account dropdown styling */
-/* Push account section to extreme right */
 .auth-section {
     position: absolute;
-    right: 5px; /* Even closer to the edge */
+    right: 5px;
     top: 50%;
     transform: translateY(-50%);
     display: flex;
     align-items: center;
     margin-left: auto;
+    z-index: 1001; /* Ensure it's above other elements */
 }
 
 .auth-dropdown {
-    list-style: none;
     position: relative;
+    display: inline-block;
 }
 
 .account-btn {
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 8px;
-    background: linear-gradient(45deg, #8e24aa, #5e35b1, #3949ab); /* Purple gradient */
+    background: linear-gradient(45deg, #8e24aa, #5e35b1, #3949ab);
     border: none;
-    color: #ffffff;  /* White text */
+    color: #ffffff !important;
     font-size: 16px;
     cursor: pointer;
-    padding: 8px 16px;
-    border-radius: 50px;  /* Make fully rounded */
-    transition: all 0.3s ease;
-    position: relative;
+    padding: 10px 18px;
+    border-radius: 50px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
     font-family: var(--font-primary);
+    min-width: 120px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    outline: none; /* Remove outline to prevent focus issues */
+    -webkit-tap-highlight-color: transparent; /* Remove tap highlight on mobile */
 }
 
-.account-btn:hover {
-    background: linear-gradient(45deg, #7b1fa2, #512da8, #303f9f); /* Slightly darker gradient on hover */
+.account-btn:hover, 
+.account-btn:focus {
+    background: linear-gradient(45deg, #7b1fa2, #512da8, #303f9f);
     transform: scale(1.05);
-    box-shadow: 0 2px 10px rgba(142, 36, 170, 0.3); /* Add subtle purple glow */
+    box-shadow: 0 2px 10px rgba(142, 36, 170, 0.3);
 }
 
 .account-btn i {
     font-size: 20px;
-    color: #ffffff;  /* White icon */
+    color: #ffffff;
 }
 
-/* Fix dropdown visibility */
 .dropdown-content {
     position: absolute;
-    top: 100%;
+    top: calc(100% + 8px); /* Position below button with gap */
     right: 0;
     background: #fff;
     min-width: 220px;
-    border-radius: 4px;  /* Reduced from 8px to 4px for subtle rounding */
-    overflow: hidden;  /* Changed from 100% to 8px for better appearance */
+    border-radius: 4px;
+    overflow: hidden;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(10px);
-    transition: all 0.3s ease;
-    z-index: 1000;
-    display: block;
-    margin-top: 8px;  /* Add some space between button and dropdown */
-}
-
-/* Add subtle border for better definition */
-.dropdown-content::before {
-    content: '';
-    position: absolute;
-    top: -1px;
-    left: 0;
-    right: 0;
-    bottom: 0;
+    display: none; /* Start hidden */
+    z-index: 1002; /* Higher than auth-section */
     border: 1px solid rgba(0, 0, 0, 0.1);
-    border-radius: 0;  
-    pointer-events: none;
 }
 
-/* When show class is added */
+/* Show dropdown only when it has the show class */
 .dropdown-content.show {
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(0);
+    display: block;
 }
 
-/* Override any hover effects */
+/* Disable any hover effects */
 .auth-dropdown:hover .dropdown-content {
-    display: none; /* Disable hover effect */
+    display: none;
 }
 
 .dropdown-item {
     display: flex;
     align-items: center;
     gap: 10px;
-    border-radius: 0;  
     padding: 12px 16px;
     color: #333;
     text-decoration: none;
-    transition: all 0.3s ease;
+    transition: background-color 0.2s ease, color 0.2s ease;
+    cursor: pointer;
 }
 
 .dropdown-item i {
     width: 20px;
     color: #666;
-    transition: color 0.3s ease;
+    text-align: center;
+    transition: color 0.2s ease;
 }
 
 .dropdown-item:hover {
     background: #f8f9fa;
-    border-radius: 0;  
     color: #4285f4;
 }
 
@@ -282,14 +267,10 @@ nav ul li {
     margin: 8px 0;
 }
 
-/* Active state for logged in user */
-.logged-in .account-btn {
-    color: #4285f4;
-}
-
+/* Fix logout link visibility */
 .logged-in #login-link,
 .logged-in #register-link {
-    display: none;
+    display: none !important;
 }
 
 .logged-in #logout-link {

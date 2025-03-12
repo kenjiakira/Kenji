@@ -33,7 +33,7 @@
     },
     {
       "src": "^/account(?:/)?$",
-      "dest": "/account.html"
+      "dest": "/profile.html"
     },
     {
       "src": "^/login(?:/)?$",

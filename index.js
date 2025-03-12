@@ -330,8 +330,8 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-app.get(['/account', '/account.html', '/profile'], (req, res) => {
-    res.sendFile(path.join(__dirname, 'account.html'));
+app.get(['/account', '/profile.html', '/profile'], (req, res) => {
+    res.sendFile(path.join(__dirname, 'profile.html'));
 });
 
 app.use((req, res) => {

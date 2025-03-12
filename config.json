@@ -1,18 +1,1 @@
-{
-  "blogName": "My Simple Blog",
-  "description": "A simple blog created with HTML, CSS, and JavaScript",
-  "author": "Blog Owner",
-  "postsPerPage": 6,
-  "featuredCategories": [
-    "Web Development",
-    "JavaScript",
-    "CSS",
-    "Node.js",
-    "Frontend"
-  ],
-  "socialMedia": {
-    "twitter": "https://twitter.com/myblog",
-    "facebook": "https://facebook.com/myblog",
-    "instagram": "https://instagram.com/myblog"
-  }
-}
+{}
